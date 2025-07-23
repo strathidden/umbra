@@ -46,6 +46,23 @@ void Renderer::init()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_data.quadIBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+    glGenVertexArrays(1, &s_data.lineVAO);
+    glBindVertexArray(s_data.lineVAO);
+
+    glGenBuffers(1, &s_data.lineVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, s_data.lineVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 2000, nullptr, GL_DYNAMIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
+
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
+
     s_data.whiteTexture = std::make_unique<Texture>();
     uint32_t whiteTextureData = 0xffffffff;
     glGenTextures(1, &s_data.whiteTexture->m_id);
@@ -111,7 +128,11 @@ void Renderer::beginFrame(const Camera& camera)
 
 void Renderer::endFrame()
 {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     flush();
+    flushLines();
 }
 
 void Renderer::drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, Texture* texture, float tilingFactor, const glm::vec2& uvMin, const glm::vec2& uvMax)
@@ -241,50 +262,30 @@ void Renderer::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size,
 
 void Renderer::drawLine(const glm::vec2& p0, const glm::vec2& p1, const glm::vec4& color, float thickness)
 {
-    if (s_data.lineVertexCount >= 2000) {
+    if (s_data.lineVertexCount >= 1998) {
         flushLines();
     }
 
-    glm::vec2 lineDir = glm::normalize(p1 - p0);
-    glm::vec2 normal = glm::vec2(-lineDir.y, lineDir.x) * thickness * 0.5f;
+    glm::vec2 dir = glm::normalize(p1 - p0);
+    glm::vec2 normal = glm::vec2(-dir.y, dir.x) * thickness * 0.5f;
 
     s_data.lineVertexBufferPtr->position = {p0.x - normal.x, p0.y - normal.y, 0.0f};
     s_data.lineVertexBufferPtr->color = color;
-    s_data.lineVertexBufferPtr->texIndex = 0.0f;
-    s_data.lineVertexBufferPtr->tilingFactor = 1.0f;
     s_data.lineVertexBufferPtr++;
-
+    
     s_data.lineVertexBufferPtr->position = {p0.x + normal.x, p0.y + normal.y, 0.0f};
     s_data.lineVertexBufferPtr->color = color;
-    s_data.lineVertexBufferPtr->texIndex = 0.0f;
-    s_data.lineVertexBufferPtr->tilingFactor = 1.0f;
     s_data.lineVertexBufferPtr++;
-
+    
     s_data.lineVertexBufferPtr->position = {p1.x - normal.x, p1.y - normal.y, 0.0f};
     s_data.lineVertexBufferPtr->color = color;
-    s_data.lineVertexBufferPtr->texIndex = 0.0f;
-    s_data.lineVertexBufferPtr->tilingFactor = 1.0f;
     s_data.lineVertexBufferPtr++;
-
-    s_data.lineVertexBufferPtr->position = {p1.x - normal.x, p1.y - normal.y, 0.0f};
-    s_data.lineVertexBufferPtr->color = color;
-    s_data.lineVertexBufferPtr->texIndex = 0.0f;
-    s_data.lineVertexBufferPtr->tilingFactor = 1.0f;
-    s_data.lineVertexBufferPtr++;
-
+    
     s_data.lineVertexBufferPtr->position = {p1.x + normal.x, p1.y + normal.y, 0.0f};
     s_data.lineVertexBufferPtr->color = color;
-    s_data.lineVertexBufferPtr->texIndex = 0.0f;
-    s_data.lineVertexBufferPtr->tilingFactor = 1.0f;
     s_data.lineVertexBufferPtr++;
 
-    s_data.lineVertexBufferPtr->position = {p0.x + normal.x, p0.y + normal.y, 0.0f};
-    s_data.lineVertexBufferPtr->color = color;
-    s_data.lineVertexBufferPtr->texIndex = 0.0f;
-    s_data.lineVertexBufferPtr->tilingFactor = 1.0f;
-    s_data.lineVertexBufferPtr++;
-
-    s_data.lineVertexCount += 6;
+    s_data.lineVertexCount += 4;
 }
 
 const RenderStats& Renderer::getStats()
@@ -330,7 +331,7 @@ void Renderer::flushLines()
 
     s_data.lineShader->use();
     glBindVertexArray(s_data.lineVAO);
-    glDrawArrays(GL_TRIANGLES, 0, s_data.lineVertexCount);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, s_data.lineVertexCount);
     s_data.stats.drawCalls++;
 
     s_data.lineVertexBufferPtr = s_data.lineVertexBufferBase;

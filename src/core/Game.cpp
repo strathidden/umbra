@@ -1,9 +1,8 @@
 #include "Game.h"
-#include "Logger.h"
 
 Game::Game()
 {
-    m_window = std::make_unique<Window>(WindowProps{"Umbra", 1280, 720, true});
+    m_window = std::make_unique<Window>(WindowProps{"Umbra", 1920, 1080, true});
 }
 
 Game::~Game() = default;

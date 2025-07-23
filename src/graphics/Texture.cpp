@@ -10,8 +10,6 @@ Texture::~Texture()
 
 bool Texture::loadFromFile(const std::string& path)
 {
-    stbi_set_flip_vertically_on_load(true);
-
     unsigned char* data = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, STBI_rgb_alpha);
 
     if (!data)

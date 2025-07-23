@@ -1,8 +1,8 @@
 #version 460 core
 in vec4 v_color;
 
-out vec4 color;
+out vec4 fragColor;
 
 void main() {
-    color = v_color;
+    fragColor = v_color;
 }

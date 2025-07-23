@@ -22,13 +22,16 @@ public:
         }
 
         m_camera = std::make_unique<Camera>();
-        m_camera->setProjection(0.0f, 1280.0f, 720.0f, 0.0f);
+        m_camera->setProjection(0.0f, 1920.0f, 1080.0f, 0.0f);
     }
 
     void update(float deltaTime) override
     {
         m_playerPos.x += 100.0f * deltaTime;
-        if (m_playerPos.x > 1280) m_playerPos.x = 0;
+        if (m_playerPos.x > 1920) m_playerPos.x = 0;
+
+        // auto stats = Renderer::getStats();
+        // Logger::info("Draw calls: ", stats.drawCalls, " Quads count: ", stats.quadCount, " Index count: ", stats.indexCount, " Vertex count: ", stats.vertexCount);
     }
 
     void render() override
@@ -37,10 +40,9 @@ public:
 
         Renderer::drawQuad(m_playerPos, {100.0f, 100.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, m_playerTexture);
 
-        for (int i = 0; i < 5; i++)
-        {
-            Renderer::drawQuad({i * 200.0f, 500.0f}, {180.0f, 50.0f}, {0.2, 0.8f, 0.3f, 1.0f});
-        }
+        Renderer::drawLine({100, 100}, {500, 500}, {1, 0, 0, 1}, 5.0f);
+        Renderer::drawLine({100, 500}, {500, 100}, {0, 0, 1, 1}, 3.0f);
+
 
         Renderer::endFrame();
     }
