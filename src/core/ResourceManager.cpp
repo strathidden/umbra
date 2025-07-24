@@ -2,19 +2,19 @@
 
 std::unordered_map<std::string, std::unique_ptr<Texture>> ResourceManager::m_textures;
 
-Texture* ResourceManager::loadTexture(const std::string& path)
+Texture* ResourceManager::loadTexture(const std::string& filepath)
 {
-    auto it = m_textures.find(path);
+    auto it = m_textures.find(filepath);
     if (it != m_textures.end())
     {
         return it->second.get();
     }
 
     auto texture = std::make_unique<Texture>();
-    if (texture->loadFromFile(path))
+    if (texture->loadFromFile(filepath))
     {
-        m_textures[path] = std::move(texture);
-        return m_textures[path].get();
+        m_textures[filepath] = std::move(texture);
+        return m_textures[filepath].get();
     }
 
     return nullptr;

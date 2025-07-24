@@ -8,13 +8,13 @@ Texture::~Texture()
     if (m_id) glDeleteTextures(1, &m_id);
 }
 
-bool Texture::loadFromFile(const std::string& path)
+bool Texture::loadFromFile(const std::string& filepath)
 {
-    unsigned char* data = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, STBI_rgb_alpha);
+    unsigned char* data = stbi_load(filepath.c_str(), &m_width, &m_height, &m_channels, STBI_rgb_alpha);
 
     if (!data)
     {
-        Logger::error("Failed to load texture: ", path);
+        Logger::error("Failed to load texture: ", filepath);
         return false;
     }
 
@@ -31,7 +31,7 @@ bool Texture::loadFromFile(const std::string& path)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     stbi_image_free(data);
-    Logger::info("Loaded texture: ", path);
+    Logger::info("Loaded texture: ", filepath);
     return true;
 }
 

@@ -7,7 +7,7 @@
 class ResourceManager
 {
 public:
-    static Texture* loadTexture(const std::string& path);
+    static Texture* loadTexture(const std::string& filepath);
     static void clear();
 
 private:

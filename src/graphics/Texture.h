@@ -8,7 +8,7 @@ public:
     Texture() = default;
     ~Texture();
 
-    bool loadFromFile(const std::string& path);
+    bool loadFromFile(const std::string& filepath);
     void bind(unsigned int slot = 0) const;
 
     int getWidth() const { return m_width; }

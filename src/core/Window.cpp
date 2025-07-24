@@ -45,7 +45,7 @@ Window::Window(const WindowProps& props)
         auto win = static_cast<Window*>(glfwGetWindowUserPointer(window));
         win->m_props.width = width;
         win->m_props.height = height;
-        if (win->m_resizeCallback) win->m_resizeCallback();
+        if (win->m_resizeCallback) win->m_resizeCallback(width, height);
     });
 
     Logger::info("Window created: ", props.title, " (", props.width, "x", props.height, ")");

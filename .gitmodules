@@ -11,3 +11,9 @@
 [submodule "libs/stb"]
 	path = libs/stb
 	url = https://github.com/nothings/stb
+[submodule "libs/openal"]
+	path = libs/openal
+	url = https://github.com/kcat/openal-soft
+[submodule "libs/json"]
+	path = libs/json
+	url = https://github.com/nlohmann/json
