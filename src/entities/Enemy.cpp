@@ -1,7 +1,6 @@
 #include "Enemy.h"
-#include "Player.h"
-#include "../core/ResourceManager.h"
 #include "../graphics/SpriteSheet.h"
+#include "../core/Engine.h"
 
 Enemy::Enemy()
 {
@@ -89,7 +88,7 @@ void Enemy::update(float deltaTime)
 
         case State::ATTACKING:
         {
-            if (m_animator->getCurrentAnimation().isFinished())
+            if (m_animator->getCurrentAnimation()->isFinished())
             {
                 m_state = State::CHASING;
                 m_animator->play("chase");

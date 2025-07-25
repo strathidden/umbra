@@ -1,6 +1,7 @@
 #include "DialogueSystem.h"
 #include "../graphics/Renderer.h"
 #include "../core/Logger.h"
+#include "../graphics/Font.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -87,7 +88,17 @@ void DialogueSystem::render()
 {
     if (!m_active || !m_currentNode) return;
 
-    Renderer::drawQuad({180, 350}, {1080, 200}, {0.1f, 0.1f, 0.1f, 0.9f});
+    const float boxHeight = 200.0f;
+    const float padding = 20.0f;
+    Renderer::drawQuad({padding, 1080 - boxHeight - padding}, {1920 - 2*padding, boxHeight}, {0.1f, 0.1f, 0.1f, 0.9f});
 
-    // todo: render speaker name and text;
+    if (Font::getDefaultFont())
+    {
+        Font::getDefaultFont()->renderText(m_currentNode->speaker + ":", {padding + 10.0f, 720 - boxHeight - padding + 10.0f}, 28.0f, {0.8f, 0.8f, 1.0f, 1.0f});
+    }
+
+    if (Font::getDefaultFont())
+    {
+        Font::getDefaultFont()->renderTextWrapped(m_currentNode->text, {padding + 30.0f, 720 - boxHeight - padding + 50.0f}, 24.0f, 1200.0f, {1.0f, 1.0f, 1.0f, 1.0f});
+    }
 }

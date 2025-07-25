@@ -57,6 +57,11 @@ Window::~Window()
     glfwTerminate();
 }
 
+void Window::close()
+{
+    glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+}
+
 void Window::onUpdate()
 {
     glfwPollEvents();

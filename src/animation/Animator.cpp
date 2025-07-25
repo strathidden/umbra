@@ -38,3 +38,13 @@ void Animator::applyToSprite(Sprite& sprite) const
         }
     }
 }
+
+const Animation* Animator::getCurrentAnimation() const
+{
+    auto it = m_animations.find(m_currentAnimation);
+    if (it != m_animations.end())
+    {
+        return &it->second;
+    }
+    return nullptr;
+}

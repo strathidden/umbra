@@ -1,5 +1,4 @@
 #pragma once
-#include "../core/Engine.h"
 
 class GameState
 {

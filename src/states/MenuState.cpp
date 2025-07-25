@@ -15,7 +15,7 @@ void MenuState::enter()
     m_quitButton->position = {500.0f, 400.0f};
     m_quitButton->size = {200.0f, 50.0f};
     m_quitButton->setOnClick([]() {
-        Engine::getWindow().setShouldClose(true);
+        Engine::getWindow().close();
     });
 
     UIManager::addElement(m_startButton.get());

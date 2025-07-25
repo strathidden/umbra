@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/openal)
+add_subdirectory(libs/freetype)
 
 include_directories(
     libs/glfw/include
@@ -15,6 +16,7 @@ include_directories(
     libs/stb
     libs/openal/include
     libs/json/single_include
+    libs/freetype/include
 )
 
 file(GLOB_RECURSE SRC_FILES "src/*.cpp")
@@ -34,7 +36,7 @@ set(IMGUI_FILES
 
 add_executable(umbra ${SRC_FILES} ${GLAD_FILES} ${IMGUI_FILES})
 
-target_link_libraries(umbra PRIVATE glfw OpenAL::OpenAL)
+target_link_libraries(umbra PRIVATE glfw OpenAL::OpenAL freetype)
 
 file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})

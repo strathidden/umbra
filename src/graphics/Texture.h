@@ -9,6 +9,7 @@ public:
     ~Texture();
 
     bool loadFromFile(const std::string& filepath);
+    bool createFromData(unsigned char* data, int width, int height, int channels);
     void bind(unsigned int slot = 0) const;
 
     int getWidth() const { return m_width; }

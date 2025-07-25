@@ -97,3 +97,51 @@ void PhysicsEngine::resolveCollisions(PhysicsBody& body, float deltaTime)
         }
     }
 }
+
+bool PhysicsEngine::raycast(const glm::vec2& start, const glm::vec2& direction, RaycastHit& hit, uint32_t layerMask)
+{
+    float minDistance = std::numeric_limits<float>::max();
+    bool hitFound = false;
+    glm::vec2 normalizedDir = glm::normalize(direction);
+    float maxDistance = glm::length(direction);
+    
+    for (auto body : s_bodies)
+    {
+        if (!(body->collider.layer & layerMask)) continue;
+        if (body->isStatic) continue;
+        
+        // simple AABB raycast
+        glm::vec2 halfSize = body->size * 0.5f;
+        glm::vec2 center = body->position + halfSize;
+        
+        glm::vec2 tMin = (center - halfSize - start) / normalizedDir;
+        glm::vec2 tMax = (center + halfSize - start) / normalizedDir;
+        
+        glm::vec2 t1 = glm::min(tMin, tMax);
+        glm::vec2 t2 = glm::max(tMin, tMax);
+        
+        float tNear = glm::max(t1.x, t1.y);
+        float tFar = glm::min(t2.x, t2.y);
+        
+        if (tNear < tFar && tNear > 0 && tNear < maxDistance && tNear < minDistance)
+        {
+            minDistance = tNear;
+            hit.distance = tNear;
+            hit.point = start + normalizedDir * tNear;
+            
+            if (t1.x > t1.y)
+            {
+                hit.normal = normalizedDir.x > 0 ? glm::vec2(-1, 0) : glm::vec2(1, 0);
+            }
+            else
+            {
+                hit.normal = normalizedDir.y > 0 ? glm::vec2(0, -1) : glm::vec2(0, 1);
+            }
+            
+            hit.body = body;
+            hitFound = true;
+        }
+    }
+    
+    return hitFound;
+}

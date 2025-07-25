@@ -13,7 +13,7 @@ public:
     void update(float deltaTime);
     void render();
 
-    bool isEmpty() const { return m_states.empty; }
+    bool isEmpty() const { return m_states.empty(); }
 
 private:
     std::stack<std::unique_ptr<GameState>> m_states;

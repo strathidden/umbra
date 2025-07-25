@@ -17,3 +17,6 @@
 [submodule "libs/json"]
 	path = libs/json
 	url = https://github.com/nlohmann/json
+[submodule "libs/freetype"]
+	path = libs/freetype
+	url = https://github.com/freetype/freetype

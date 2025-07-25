@@ -6,6 +6,8 @@ std::unordered_map<int, KeyState> InputManager::s_keyStates;
 std::unordered_map<std::string, int> InputManager::s_keyMap;
 glm::vec2 InputManager::s_mousePosition = {0.0f, 0.0f};
 float InputManager::s_mouseScroll = 0.0f;
+float InputManager::s_controllerDeadzone = 0.15f;
+GLFWgamepadstate InputManager::s_controllerState;
 
 void InputManager::init(GLFWwindow* window)
 {
@@ -44,6 +46,8 @@ void InputManager::update()
     }
 
     s_mouseScroll = 0.0f;
+
+    glfwGetGamepadState(GLFW_JOYSTICK_1, &s_controllerState);
 
     glfwPollEvents();
 }
@@ -113,4 +117,23 @@ int InputManager::getMappedKey(const std::string& name)
 {
     auto it = s_keyMap.find(name);
     return (it != s_keyMap.end()) ? it->second : -1;
+}
+
+bool InputManager::isControllerConnected(int controller)
+{
+    return glfwJoystickIsGamepad(controller);
+}
+
+bool InputManager::isControllerButtonPressed(int button, int controller)
+{
+    if (!isControllerConnected(controller)) return false;
+    return s_controllerState.buttons[button] == GLFW_PRESS;
+}
+
+float InputManager::getControllerAxis(int axis, int controller)
+{
+    if (!isControllerConnected(controller)) return 0.0f;
+    
+    float value = s_controllerState.axes[axis];
+    return std::abs(value) > s_controllerDeadzone ? value : 0.0f;
 }

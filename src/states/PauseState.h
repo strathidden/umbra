@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
 #include "../ui/Button.h"
+#include <memory>
 
 class PauseState : public GameState
 {

@@ -2,7 +2,7 @@
 #include "Window.h"
 #include "Timer.h"
 #include "../states/StateManager.h"
-#include "../entities/Enemy.h"
+#include "../entities/Entity.h"
 #include <memory>
 
 class Engine
@@ -20,16 +20,16 @@ public:
 
     virtual void onResize(int width, int height) = 0;
 
-    Window& getWindow() { return *m_window; }
-    StateManager& getStateManager() { return m_stateManager; }
+    static Window& getWindow() { return *s_window; }
+    static StateManager& getStateManager() { return s_stateManager; }
     static Entity* getPlayer() { return s_player; }
 
 private:
     void mainLoop();
 
-    std::unique_ptr<Window> m_window;
+    static std::unique_ptr<Window> s_window;
     Timer m_timer;
     bool m_running = false;
-    StateManager m_stateManager;
+    static StateManager s_stateManager;
     static Entity* s_player;
 };

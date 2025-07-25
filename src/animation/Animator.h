@@ -13,7 +13,7 @@ public:
     void update(float deltaTime) override;
     void applyToSprite(Sprite& sprite) const;
 
-    const std::string& getCurrentAnimation() const { return m_currentAnimation; }
+    const Animation* getCurrentAnimation() const;
 
 private:
     std::unordered_map<std::string, Animation> m_animations;

@@ -20,6 +20,8 @@ public:
 
     Window(const WindowProps& props);
     ~Window();
+    
+    void close();
 
     void onUpdate();
     void setVSync(bool enabled);
