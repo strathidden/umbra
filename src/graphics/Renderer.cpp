@@ -152,7 +152,7 @@ void Renderer::drawQuad(const glm::vec2& position, const glm::vec2& size, const 
         { uvMin.x, uvMax.y }
     };
 
-    if (s_data.quadIndexCount >= RenderData::MAX_INDICES)
+    if (s_data.quadIndexCount + 6 >= RenderData::MAX_INDICES || (s_data.quadVertexBufferPtr + 4) > (s_data.quadVertexBufferBase + RenderData::MAX_VERTICES))
     {
         nextBatch();
     }
@@ -214,7 +214,7 @@ void Renderer::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size,
         { uvMin.x, uvMax.y }
     };
 
-    if (s_data.quadIndexCount >= RenderData::MAX_INDICES)
+    if (s_data.quadIndexCount + 6 >= RenderData::MAX_INDICES || (s_data.quadVertexBufferPtr + 4) > (s_data.quadVertexBufferBase + RenderData::MAX_VERTICES))
     {
         nextBatch();
     }
@@ -262,7 +262,7 @@ void Renderer::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size,
 
 void Renderer::drawLine(const glm::vec2& p0, const glm::vec2& p1, const glm::vec4& color, float thickness)
 {
-    if (s_data.lineVertexCount >= 1998) {
+    if (s_data.lineVertexCount + 4 > 2000) {
         flushLines();
     }
 
