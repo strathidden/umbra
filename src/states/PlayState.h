@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "../levels/TileMap.h"
 #include "../entities/Player.h"
+#include "../graphics/Camera.h"
 
 class PlayState : public GameState
 {
@@ -13,5 +14,4 @@ public:
 
 private:
     TileMap m_tileMap;
-    std::unique_ptr<Player> m_player;
 };

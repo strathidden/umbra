@@ -8,14 +8,14 @@ void MenuState::enter()
     m_startButton->position = {500.0f, 300.0f};
     m_startButton->size = {200.0f, 50.0f};
     m_startButton->setOnClick([this]() {
-        Engine::getStateManager().changeState(std::make_unique<PlayState>());
+        Engine::getInstance()->getStateManager().changeState(std::make_unique<PlayState>());
     });
 
     m_quitButton = std::make_unique<Button>("Quit");
     m_quitButton->position = {500.0f, 400.0f};
     m_quitButton->size = {200.0f, 50.0f};
     m_quitButton->setOnClick([]() {
-        Engine::getWindow().close();
+        Engine::getInstance()->getWindow().close();
     });
 
     UIManager::addElement(m_startButton.get());

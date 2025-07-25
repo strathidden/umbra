@@ -9,14 +9,14 @@ void PauseState::enter()
     m_resumeButton->position = {500.0f, 300.0f};
     m_resumeButton->size = {200.0f, 50.0f};
     m_resumeButton->setOnClick([this]() {
-        Engine::getStateManager().popState();
+        Engine::getInstance()->getStateManager().popState();
     });
 
     m_menuButton = std::make_unique<Button>("Main Menu");
     m_menuButton->position = {500.0f, 400.0f};
     m_menuButton->size = {200.0f, 50.0f};
     m_menuButton->setOnClick([this]() {
-        Engine::getStateManager().changeState(std::make_unique<MenuState>());
+        Engine::getInstance()->getStateManager().changeState(std::make_unique<MenuState>());
     });
 
     UIManager::addElement(m_resumeButton.get());

@@ -2,12 +2,21 @@
 #include "PauseState.h"
 #include "../core/Engine.h"
 #include "../core/InputManager.h"
+#include "../graphics/Renderer.h"
+#include "../core/Engine.h"
+#include "../game/Game.h"
+#include "../core/Logger.h"
 
 void PlayState::enter()
 {
-    m_tileMap.loadFromFile("assets/level1.csv");
-    m_player = std::make_unique<Player>();
-    // setup level
+    auto engine = Engine::getInstance();
+    auto& game = static_cast<Game&>(*engine);
+
+    m_tileMap.loadFromFile("assets/levels/test_area.umbra");
+
+    game.getPlayer()->position = {200, 500};
+
+    game.getLevelEditor().init(&m_tileMap);
 }
 
 void PlayState::exit()
@@ -17,17 +26,28 @@ void PlayState::exit()
 
 void PlayState::update(float deltaTime)
 {
+    auto engine = Engine::getInstance();
+    auto& game = static_cast<Game&>(*engine);
+
+    game.getPlayer()->update(deltaTime);
+
+    glm::vec2 targetPos = game.getPlayer()->position - glm::vec2(400, 300);
+    glm::vec2 cameraPos = engine->getCamera().getPosition();
+    glm::vec2 newPos = cameraPos + (targetPos - cameraPos) * 0.1f;
+    engine->getCamera().setPosition(newPos);
+
     if (InputManager::isKeyJustPressed(InputManager::getMappedKey("Pause")))
     {
-        Engine::getStateManager().pushState(std::make_unique<PauseState>());
+        engine->getStateManager().pushState(std::make_unique<PauseState>());
     }
-
-    m_player->update(deltaTime);
-    PhysicsEngine::update(deltaTime);
 }
 
 void PlayState::render()
 {
+    auto engine = Engine::getInstance();
+    auto& game = static_cast<Game&>(*engine);
+
+    Renderer::drawQuad({0, 0}, {1600, 900}, {0.1f, 0.1f, 0.2f, 1.0f});
     m_tileMap.render();
-    m_player->render();
+    game.getPlayer()->render();
 }

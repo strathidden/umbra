@@ -1,19 +1,24 @@
 #include "Engine.h"
 #include "InputManager.h"
+#include "../entities/Entity.h"
+#include "InputManager.h"
+#include "ResourceManager.h"
+#include "../graphics/Renderer.h"
+#include "../audio/AudioManager.h"
+#include "../physics/PhysicsEngine.h"
+#include "../ui/UI.h"
 
-std::unique_ptr<Window> Engine::s_window;
-StateManager Engine::s_stateManager;
-Entity* Engine::s_player = nullptr;
+Engine* Engine::s_instance = nullptr;
 
 Engine::Engine()
 {
-    s_window = std::make_unique<Window>(WindowProps{"Umbra", 1920, 1080, true});
+    s_instance = this;
 
-    s_window->setResizeCallback([this](int width, int height) {
+    m_window = std::make_unique<Window>(WindowProps{"Umbra", 1920, 1080, true});
+
+    m_window->setResizeCallback([this](int width, int height) {
         onResize(width, height);
     });
-
-    InputManager::init(s_window->getNativeWindow());
 }
 
 Engine::~Engine() = default;
@@ -21,7 +26,7 @@ Engine::~Engine() = default;
 void Engine::run()
 {
     initialize();
-    onResize(s_window->getWidth(), s_window->getHeight());
+    onResize(m_window->getWidth(), m_window->getHeight());
     m_running = true;
     mainLoop();
     shutdown();
@@ -29,12 +34,25 @@ void Engine::run()
 
 void Engine::mainLoop()
 {
-    while (m_running && !glfwWindowShouldClose(s_window->getNativeWindow()))
+    m_camera = std::make_unique<Camera>();
+    m_camera->setProjection(0.0f, 1920.0f, 1080.0f, 0.0f);
+
+    InputManager::init(m_window->getNativeWindow());
+    AudioManager::init();
+    PhysicsEngine::init();
+    Renderer::init();
+    UIManager::init();
+
+    while (m_running && !glfwWindowShouldClose(m_window->getNativeWindow()))
     {
         float deltaTime = m_timer.tick();
+
         InputManager::update();
+
         update(deltaTime);
+
         render();
-        s_window->onUpdate();
+
+        m_window->onUpdate();
     }
 }

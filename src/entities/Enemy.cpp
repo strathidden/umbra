@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "../graphics/SpriteSheet.h"
 #include "../core/Engine.h"
+#include "../game/Game.h"
 
 Enemy::Enemy()
 {
@@ -41,6 +42,9 @@ Enemy::Enemy()
 
 void Enemy::update(float deltaTime)
 {
+    auto engine = Engine::getInstance();
+    auto& game = static_cast<Game&>(*engine);
+
     Entity::update(deltaTime);
 
     position = m_physicsBody->position;
@@ -55,7 +59,7 @@ void Enemy::update(float deltaTime)
                 m_physicsBody->velocity.x = -m_physicsBody->velocity.x;
             }
 
-            auto player = Engine::getPlayer();
+            auto player = game.getPlayer();
             if (player && glm::distance(position, player->position) < m_detectionRange)
             {
                 m_state = State::CHASING;
@@ -66,7 +70,7 @@ void Enemy::update(float deltaTime)
 
         case State::CHASING:
         {
-            auto player = Engine::getPlayer();
+            auto player = game.getPlayer();
             if (player)
             {
                 float direction = (player->position.x > position.x) ? 1.0f : -1.0f;
